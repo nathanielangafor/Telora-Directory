@@ -130,7 +130,7 @@ export default function Home({ founders }) {
     <>
       <Head>
         <title>Telora Directory - Founders</title>
-        <meta name="description" content="A directory of founders with their LinkedIn information." />
+        <meta name="description" content="A directory of Telora founders and their contact information." />
       </Head>
       <main className="container">
         <div className="banner">
