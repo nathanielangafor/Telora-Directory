@@ -158,6 +158,8 @@ export default function Home({ founders }) {
           ))}
         </section>
       </main>
+      <br>
+      <br>
       <footer className="footer">
         <div className="footer-left">
           Brought to you by team Talys <span className="heart">&lt;3</span>
