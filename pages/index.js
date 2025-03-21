@@ -14,6 +14,7 @@ const fieldLimits = {
   github: 100,
   x: 100,
   phone: 20,
+  otherWebsite: 100, // new field limit
 };
 
 // --- getServerSideProps ---
@@ -33,6 +34,7 @@ export async function getServerSideProps() {
       x: 'https://x.com/zachnguyen',
       summary:
         "Zach Nguyen is the Chief Technology Officer at Catalyst. With extensive experience in tech leadership and innovation, he drives cutting-edge solutions in the digital landscape.",
+      otherWebsite: 'https://example.com', // new field sample
     },
     {
       name: 'Nathaniel Angafor',
@@ -45,6 +47,7 @@ export async function getServerSideProps() {
       x: 'https://x.com/nathanielangafor',
       summary:
         "Nathaniel Angafor is the Chief Executive Officer at Catalyst, spearheading strategic growth and sustainability with a keen focus on innovative business solutions.",
+      otherWebsite: '', // empty by default
     },
   ];
 
@@ -68,6 +71,7 @@ export async function getServerSideProps() {
     github: f.github,
     x: f.x,
     summary: f.summary,
+    otherWebsite: f.otherWebsite, // pass along new field
   }));
 
   return {
@@ -81,7 +85,6 @@ function AutofillLinkedinModal({ linkedinUrl, onInputChange, onAutofill, onFillM
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
   return createPortal(
-    // Clicking outside calls onClose to cancel the autofill process.
     <div className="overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <h2>Autofill with Linkedin</h2>
@@ -122,7 +125,6 @@ function AddContactModal({ formData, onInputChange, onFileChange, onAdd, onClose
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
   return createPortal(
-    // Clicking outside simply closes the manual add modal.
     <div className="overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <h2>Add Contact</h2>
@@ -211,6 +213,17 @@ function AddContactModal({ formData, onInputChange, onFileChange, onAdd, onClose
           />
         </div>
         <div className="inputGroup">
+          <label className="inputLabel">Other Website</label>
+          <input
+            type="text"
+            name="otherWebsite"
+            value={formData.otherWebsite}
+            onChange={onInputChange}
+            className="inputField"
+            maxLength={fieldLimits.otherWebsite}
+          />
+        </div>
+        <div className="inputGroup">
           <label className="inputLabel">Phone</label>
           <input
             type="text"
@@ -240,7 +253,7 @@ function AddContactModal({ formData, onInputChange, onFileChange, onAdd, onClose
   );
 }
 
-// --- EditModal and FounderCard Components (unchanged) ---
+// --- EditModal Component ---
 function EditModal({ formData, onInputChange, onFileChange, onSave, onDelete, onClose, isSaving }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -286,6 +299,10 @@ function EditModal({ formData, onInputChange, onFileChange, onSave, onDelete, on
           <input type="text" name="x" value={formData.x} onChange={onInputChange} className="inputField" maxLength={fieldLimits.x} />
         </div>
         <div className="inputGroup">
+          <label className="inputLabel">Other Website</label>
+          <input type="text" name="otherWebsite" value={formData.otherWebsite} onChange={onInputChange} className="inputField" maxLength={fieldLimits.otherWebsite} />
+        </div>
+        <div className="inputGroup">
           <label className="inputLabel">Phone</label>
           <input type="text" name="phone" value={formData.phone} onChange={onInputChange} className="inputField" maxLength={fieldLimits.phone} />
         </div>
@@ -310,6 +327,7 @@ function EditModal({ formData, onInputChange, onFileChange, onSave, onDelete, on
   );
 }
 
+// --- FounderCard Component ---
 function FounderCard({ founder }) {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -322,6 +340,7 @@ function FounderCard({ founder }) {
     github: founder.github,
     x: founder.x,
     summary: founder.summary,
+    otherWebsite: founder.otherWebsite, // new field
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -440,6 +459,14 @@ function FounderCard({ founder }) {
               </svg>
             </a>
           )}
+          {formData.otherWebsite && (
+            <a href={formData.otherWebsite} target="_blank" rel="noopener noreferrer" title="Other Website">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-link">
+                <path d="M10 13a5 5 0 0 0 7 7l4-4a5 5 0 0 0-7-7"/>
+                <path d="M14 11a5 5 0 0 0-7-7L3 8a5 5 0 0 0 7 7"/>
+              </svg>
+            </a>
+          )}
         </div>
       </div>
       {showModal && (
@@ -475,6 +502,7 @@ export default function Home({ founders }) {
     github: '',
     x: '',
     summary: '',
+    otherWebsite: '', // new field
     photoAutoFilled: false,
   });
 
@@ -534,7 +562,6 @@ export default function Home({ founders }) {
   };
 
   // Updated handler for autofilling using the provided LinkedIn URL.
-  // This version fetches the image and converts it to a Base64 data URL.
   const handleAutofill = async () => {
     if (!autofillLinkedinUrl) return;
     setIsAutofilling(true);
@@ -574,9 +601,9 @@ export default function Home({ founders }) {
           github: data.github || '',
           x: data.X || '',
           summary: data.summary || '',
+          otherWebsite: data.otherWebsite || '',
           photoAutoFilled: !!imageData,
         });
-        // After successful autofill, close the autofill modal and open the manual add modal
         setShowAutofillModal(false);
         setShowAddModal(true);
       } else {
@@ -603,7 +630,6 @@ export default function Home({ founders }) {
   };
 
   // New handler for closing the autofill modal (clicking outside)
-  // This will simply cancel the autofill process.
   const handleAutofillClose = () => {
     setShowAutofillModal(false);
     setIsAutofilling(false);
