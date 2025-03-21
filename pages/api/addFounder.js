@@ -6,10 +6,10 @@ export default async function handler(req, res) {
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
   
-  const { name, position, cohort, linkedin, phone, image } = req.body;
+  const { name, position, linkedin, phone, image, email, github, x, summary } = req.body;
   
-  // Validate required fields: name, position, cohort, and image
-  if (!name || !position || !cohort || !image) {
+  // Validate required fields: name, position, and image
+  if (!name || !position || !image) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
   
@@ -19,10 +19,13 @@ export default async function handler(req, res) {
     const result = await db.collection('founders').insertOne({
       name,
       position,
-      cohort,
       linkedin: linkedin || '',
       phone: phone || '',
-      image
+      image,
+      email: email || '',
+      github: github || '',
+      x: x || '',
+      summary: summary || '',
     });
     return res.status(200).json({ message: 'Founder added successfully', id: result.insertedId });
   } catch (error) {
