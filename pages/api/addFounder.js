@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
   
-  const { name, position, linkedin, phone, image, email, github, x, summary } = req.body;
+  const { name, position, linkedin, phone, image, email, github, x, summary, otherWebsite } = req.body;
   
   // Validate required fields: name, position, and image
   if (!name || !position || !image) {
@@ -26,6 +26,7 @@ export default async function handler(req, res) {
       github: github || '',
       x: x || '',
       summary: summary || '',
+      otherWebsite: otherWebsite || '', // new field
     });
     return res.status(200).json({ message: 'Founder added successfully', id: result.insertedId });
   } catch (error) {
