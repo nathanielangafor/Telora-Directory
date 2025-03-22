@@ -672,7 +672,14 @@ export default function Home({ founders }) {
       </main>
       <footer className="footer">
         <div className="footer-left">
-          Brought to you by team Catalyst <span className="heart">&lt;3</span>
+          Brought to you by team{' '}
+          <a
+            href="https://zachnguyen.com/catalyst/"
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            Catalyst
+          </a>{' '}
+          <span className="heart">&lt;3</span>
         </div>
         <div className="footer-right">
           <button className="addContactButton" onClick={handleAddContactClick}>Add Contact</button>
